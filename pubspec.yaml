@@ -1,0 +1,27 @@
+name: flutter_address_book
+description: A flutter plugin for address book.
+version: 0.0.1
+author:
+homepage: https://github.com/gsshop-microsvc/flutter_address_book
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.20.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  equatable:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.gsshop.mobile.flutter
+        pluginClass: AddressBookPlugin
+      ios:
+        pluginClass: AddressBookPlugin
