@@ -60,7 +60,13 @@ public class SwiftAddressBookPlugin: NSObject, FlutterPlugin, CNContactViewContr
     var result = [String:Any]()
 
     // name
-    result["name"] = contact.familyName ?? "" + contact.givenName ?? ""
+    let famliyName  = contact.familyName;
+    let givenName = contact.givenName;
+
+    result["name"] = famliyName + " " + givenName
+    result["familyName"] = contact.familyName ?? ""
+    result["givenName"] = contact.givenName ?? ""
+    result["middleName"] = contact.middleName ?? ""
 
     // phoneNumber
     var phoneNumber = ""
