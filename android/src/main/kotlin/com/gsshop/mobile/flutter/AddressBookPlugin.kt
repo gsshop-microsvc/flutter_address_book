@@ -27,6 +27,8 @@ import java.util.concurrent.ExecutionException
 
 import  android.net.Uri
 
+import android.util.Log
+
 
 /** AddressBookPlugin */
 class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, ActivityResultListener {
@@ -59,7 +61,13 @@ class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Activi
 
     override fun onActivityResult(code: Int, resultCode: Int, data: Intent?): Boolean {
         if (code == 1000){
+            if (data == null) {
+                pendingResult.success(null)
+                return false;
+            }
             var uri = data!!.getData() as Uri
+
+            Log.d("AddressBookPlugin", "uri : " + uri.toString());
 
             val cursor = currentActivity!!.getContentResolver().query(
                 uri,
@@ -73,16 +81,22 @@ class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Activi
             )
 
             if (cursor != null) {
-                cursor.moveToFirst()
-                var name = cursor.getString(0) as String
-                var phoneNumber =  cursor.getString(1) as String
+                try {
+                    cursor.moveToFirst()
+                    Log.d("AddressBookPlugin", "cursor count : " + cursor.getColumnCount().toString());
+                    var name = cursor.getString( 0 ) as String
+                    var phoneNumber =  cursor.getString( 1 ) as String
 
-                pendingResult.success(object: HashMap<String, String>() {
-                    init {
-                        put("name", name)
-                        put("phoneNumber", phoneNumber)
-                    }
-                })
+                    pendingResult.success(object: HashMap<String, String>() {
+                        init {
+                            put("name", name)
+                            put("phoneNumber", phoneNumber)
+                        }
+                    })
+                } catch(e: Exception) {
+                    e.printStackTrace()
+                    pendingResult.success(null)
+                }
             } else {
                 pendingResult.success(null)
             }
