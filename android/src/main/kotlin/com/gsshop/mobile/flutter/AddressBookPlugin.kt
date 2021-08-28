@@ -60,7 +60,7 @@ class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Activi
     }
 
     override fun onActivityResult(code: Int, resultCode: Int, data: Intent?): Boolean {
-        if (code == 1000){
+        if (code == 0x21){
             if (data == null) {
                 pendingResult.success(null)
                 return false;
@@ -80,12 +80,16 @@ class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Activi
                     null
             )
 
+            Log.d("AddressBookPlugin", "cursor : " + cursor!!.getCount());
+
             if (cursor != null) {
                 try {
-                    cursor.moveToFirst()
+                    var moveToFirstResult = cursor.moveToFirst()
+                    Log.d("AddressBookPlugin", "moveToFirst : " + moveToFirstResult.toString());
                     Log.d("AddressBookPlugin", "cursor count : " + cursor.getColumnCount().toString());
                     var name = cursor.getString( 0 ) as String
                     var phoneNumber =  cursor.getString( 1 ) as String
+                    cursor.close()
 
                     pendingResult.success(object: HashMap<String, String>() {
                         init {
@@ -94,6 +98,7 @@ class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Activi
                         }
                     })
                 } catch(e: Exception) {
+                    cursor.close()
                     e.printStackTrace()
                     pendingResult.success(null)
                 }
@@ -112,7 +117,7 @@ class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Activi
                     if (currentActivity != null) {
                         pendingResult = result!!;
                         val intent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
-                        currentActivity!!.startActivityForResult(intent, 1000)
+                        currentActivity!!.startActivityForResult(intent, 0x21)
                     }
                 } catch(e: Exception) {
                     print(e.localizedMessage)
@@ -123,6 +128,7 @@ class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Activi
     }
 
     override fun onDetachedFromActivity() {
+        setActivity(null);
     }
   
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
