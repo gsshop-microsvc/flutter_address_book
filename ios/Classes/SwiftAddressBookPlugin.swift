@@ -63,7 +63,7 @@ public class SwiftAddressBookPlugin: NSObject, FlutterPlugin, CNContactViewContr
     let famliyName  = contact.familyName;
     let givenName = contact.givenName;
 
-    result["name"] = famliyName + " " + givenName
+    result["name"] = famliyName + givenName
     result["familyName"] = contact.familyName ?? ""
     result["givenName"] = contact.givenName ?? ""
     result["middleName"] = contact.middleName ?? ""
