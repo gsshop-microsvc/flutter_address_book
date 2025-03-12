@@ -12,7 +12,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 // import io.flutter.plugin.common.PluginRegistry.Registrar
-import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
+// import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import android.provider.ContactsContract
@@ -31,7 +31,7 @@ import android.util.Log
 
 
 /** AddressBookPlugin */
-class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, ActivityResultListener {
+class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private var mContext: Context? = null
     private var methodChannel: MethodChannel? = null
