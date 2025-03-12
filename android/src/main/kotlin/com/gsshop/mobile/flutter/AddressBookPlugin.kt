@@ -39,15 +39,15 @@ class AddressBookPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Activi
     private var currentActivity: Activity? = null
     private lateinit var pendingResult: MethodChannel.Result
 
-    companion object {
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val instance = AddressBookPlugin()
-            
-            instance.onAttachedToEngine(registrar.context(), registrar.messenger())
-            registrar.addActivityResultListener(instance)
-        }
-    }
+//    companion object {
+//        @JvmStatic
+//        fun registerWith(registrar: Registrar) {
+//            val instance = AddressBookPlugin()
+//
+//            instance.onAttachedToEngine(registrar.context(), registrar.messenger())
+//            registrar.addActivityResultListener(instance)
+//        }
+//    }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
