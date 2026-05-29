@@ -6,37 +6,38 @@ import ContactsUI
 public class SwiftAddressBookPlugin: NSObject, FlutterPlugin, CNContactViewControllerDelegate, CNContactPickerDelegate {
 
   private var pendingResult: FlutterResult? = nil
-  private let rootViewController: UIViewController
   private var localizedLabels: Bool = true
 
   static let FORM_OPERATION_CANCELED:Int = 1
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "com.gsshop.mobile.flutter.address_book", binaryMessenger: registrar.messenger())
-    let rootViewController = UIApplication.shared.delegate!.window!!.rootViewController!;
-
-    let instance = SwiftAddressBookPlugin(rootViewController)
+    let instance = SwiftAddressBookPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
-  init(_ rootViewController: UIViewController) {
-    self.rootViewController = rootViewController
+  // UIScene 대응: register 시점 캡처 제거, 호출 시점에 keyWindow에서 lazy 획득
+  private var currentRootViewController: UIViewController? {
+    UIApplication.shared.connectedScenes
+      .compactMap { $0 as? UIWindowScene }
+      .flatMap { $0.windows }
+      .first(where: { $0.isKeyWindow })?.rootViewController
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
       case "openAddressBook":
-        //var dic4 : Dictionary<String, String> = ["name":"zedd", "phoneNumber":"phoneNumber"]
-
         self.pendingResult = result
 
         let contactPicker = CNContactPickerViewController()
         contactPicker.delegate = self
-        //contactPicker.displayedPropertyKeys = [CNContactPhoneNumbersKey]
         DispatchQueue.main.async {
-          self.rootViewController.present(contactPicker, animated: true, completion: nil)
+          guard let vc = self.currentRootViewController else {
+            result(FlutterError(code: "NO_VIEW_CONTROLLER", message: "rootViewController not available", details: nil))
+            return
+          }
+          vc.present(contactPicker, animated: true, completion: nil)
         }
-        //result(dic4)
       default:
         result(FlutterMethodNotImplemented)
     }
